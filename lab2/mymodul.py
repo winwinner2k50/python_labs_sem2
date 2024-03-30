@@ -1,63 +1,64 @@
-#перевод из 10 в 8 
-def my_to_oct(s):
-    if s.count('.') != 0:
-        s1, s2 = s.split('.')
-    else:
-        s1 = s
-
-    s1 = int(s1)
-
-    s1end = ''
-    
-    
-    while(s1 > 0):
-        s1end = str(s1%8) + s1end
-        s1//=8
-    
-    if s.count('.') != 0:
-        s2end = ''
-        s2 = float('0.'+s2)
-        while s2-int(s2)>0:
-            s2*=8
-            s2end+=str(int(s2))
-            s2-=int(s2)
-        return float(s1end+'.'+s2end)
-    else:
-        return float(s1end)
+import sys
+from PyQt6.QtWidgets import QApplication,  QWidget
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 
 
-#перевод из 8 в 10 
-def my_to_des(s):
+class Window(QWidget):
 
-    if s.count('.') != 0:
-        s1, s2 = s.split('.')
-    else:
-        s1 = s
+    def __init__(self):
+        super(Window, self).__init__()
 
-    s1end = 0
+        self.initUI()
 
-    mult = 1
+    def initUI(self):
 
-    for x in reversed(s1):
-        if x != ' ': 
-            s1end += (mult * int(x))
-        mult*=8
-    
-    if s.count('.') != 0:
+        m = PlotCanvas(self, width=5, height=3)
+        
+        m.setFixedSize(100, 100)
+        
+ 
 
-        mult = 1/8
+        self.setGeometry(10, 10, 1000, 1000)
+        m.move(100,100)
+        self.setWindowTitle('Post 6')
+        self.show()
+        
+                 
+class PlotCanvas(FigureCanvas):
 
-        s2end = 0
-        for x in s2:
-            if x != ' ':
-                s2end += (mult * int(x))
-            mult /= 8
-            
-            
-        s2end = str(s2end)
+    def __init__(self, parent=None, width=100, height=100, dpi=115):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+ 
 
-        s1end = s1end + float(s2end)
-        return float(s1end)
-    else:
-        return float(s1end)
+        FigureCanvas.__init__(self, fig)
+        self.setParent(parent)
 
+        FigureCanvas.updateGeometry(self)
+        self.plot()
+
+
+
+    def plot(self):
+        x = [0, 0, 25, 22, 0, 0, 0, 50, 78, 260, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        z = [0, 0, 75, 42, 0, 0, 0, 150, 165, 400, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        a = [0, 0, 1005, 72, 0, 0, 0, 350, 350, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        y = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+        
+        ax = self.figure.add_subplot(111)
+        ax.lineplot(x=[1], y=[1], marker='o', markersize=10, color='r')
+        ax.plot(y,x)
+        ax.plot(y,z)
+        ax.plot(y,a)
+        self.draw()
+        
+def main():
+
+    app = QApplication(sys.argv)
+    ex = Window()
+    sys.exit(app.exec())
+
+
+if __name__ == '__main__':
+    main()
